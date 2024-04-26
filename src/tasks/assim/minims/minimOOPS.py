@@ -148,6 +148,25 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 local          = 'Const.Clim.sfx',
             )
             #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'ClimAtmHR',
+                format         = 'fa',
+                genv           = self.conf.davaienv,
+                kind           = 'clim_model',
+                local          = 'Const.Clim',
+                month          = self.conf.rundate.ymdh,
+            )            
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'ClimAtmLR',
+                format         = 'fa',
+                genv           = self.conf.davaienv,
+                kind           = 'clim_model',
+                geometry       = 'global63',
+                local          = 'const.t[geometry:truncation].000',
+                month          = self.conf.rundate.ymdh,
+            )    
+            #-------------------------------------------------------------------------------
 
         # 1.1.2/ Static Resources (namelist(s) & config):
         if 'early-fetch' in self.steps or 'fetch' in self.steps:
@@ -207,6 +226,29 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 source         = 'objects/namelist_[object]',
             )
             #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'OOPSLowResolution',
+                binary         = 'arpifs',
+                format         = 'ascii',
+                genv           = self.conf.davaienv,
+                kind           = 'namelist',
+                local          = 'naml_[object]',
+                object         = ['t63'],
+                source         = 'OOPS/naml_[object]',
+            )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'OOPSFullposNamelists',
+                binary         = 'arpifs',
+                format         = 'ascii',
+                genv           = self.conf.davaienv,
+                object         = ['149','63'],
+                kind           = 'namelist',
+                local          = 'fp_change_resol_[object].nam',
+                source         = 'OOPS/fp_change_resol_[object].nam',
+            )
+
+            #-------------------------------------------------------------------------------
             # Fix TSTEP,CSTOP in Model objects
             # Disable FullPos use everywhere
             self._wrapped_input(
@@ -219,7 +261,7 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 intent         = 'inout',
                 kind           = 'namelist',
                 local          = '[object].nam',
-                object         = ['observations', 'nonlinear_model_upd2', 'linear_model_upd2', 'traj_model_upd2'],
+                object         = ['observations', 'hr_model', 'nonlinear_model_upd1', 'linear_model_upd1', 'traj_model_upd1', 'nonlinear_model_upd2', 'linear_model_upd2', 'traj_model_upd2'],
                 source         = 'objects/[object].nam',
             )
             #-------------------------------------------------------------------------------
@@ -350,6 +392,8 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 kind           = 'oominim',
                 npool          = self.conf.obs_npools,
                 slots          = self.obs_tslots,
+                mpiname        = self.conf.mpiname, 
+                bindingmethod  = 'vortex',
             )
             print(self.ticket.prompt, 'tbalgo =', tbalgo)
             print()

@@ -446,7 +446,9 @@ class Analyse4dvar(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 kind           = 'ooanalysis',
                 npool          = self.conf.obs_npools,
                 slots          = self.obs_tslots,
-                withscreening  = True,                
+                withscreening  = True,
+                mpiname        = self.conf.mpiname,
+                bindingmethod  = 'vortex',                
             )
             print(self.ticket.prompt, 'tbalgo =', tbalgo)
             print()

@@ -216,6 +216,17 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
             )
             #-------------------------------------------------------------------------------
             self._wrapped_input(
+                role           = 'OOPSFullposNamelists',
+                binary         = 'arome',
+                format         = 'ascii',
+                genv           = self.conf.appenv,
+                object         = ['26','53'],
+                kind           = 'namelist',
+                local          = 'fp_change_resol_[object].nam',
+                source         = 'objects/fp_change_resol_[object].nam',
+            )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
                 role           = 'OOPSModelObjectsNamelists',
                 binary         = 'arome',
                 format         = 'ascii',
@@ -223,7 +234,7 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 intent         = 'inout',
                 kind           = 'namelist',
                 local          = 'naml_[object]',
-                object         = ['nonlinear_model_4dv_ala', 'linear_model_ala', 'traj_model_4dv_ala'],
+                object         = ['nonlinear_model_4dv_ala', 'linear_model_ala', 'traj_model_4dv_ala', 'standard_geometry_2x','standard_geometry'],
                 source         = 'objects/naml_[object]',
             )
             #-------------------------------------------------------------------------------
@@ -263,6 +274,19 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 vapp           = self.conf.shelves_vapp,
                 vconf          = self.conf.shelves_vconf,
             )
+            #-------------------------------------------------------------------------------
+            #self._wrapped_input(
+            #    role           = 'Guess',
+            #    block          = 'cplguess',
+            #    date           = '{}/-{}'.format(self.conf.rundate, self.conf.cyclestep),
+            #    experiment     = self.conf.input_shelf,
+            #    format         = 'fa',
+            #    kind           = 'historic',
+            #    local          = 'ICMSHOOPSINIT_2x',
+            #    term           = self.guess_term(),
+            #    vapp           = self.conf.shelves_vapp,
+            #    vconf          = self.conf.shelves_vconf,
+            #)
             #-------------------------------------------------------------------------------
             self._wrapped_input(
                 role           = 'Surfex guess',
@@ -351,6 +375,79 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
             )
             #-------------------------------------------------------------------------------
             self._wrapped_input(
+                role           = 'BoundaryConditions',  # Initial
+                block          = 'coupling_nx',
+                date           = self.conf.rundate,
+                experiment     = self.conf.input_shelf,
+                format         = '[nativefmt]',
+                intent         = 'inout',
+                kind           = 'boundary',
+                local          = 'ELSCFOOPSALBC000_NX',
+#                local          = 'CPLIN+START',
+                nativefmt      = 'fa',
+                source_app     = 'ifs',
+                source_conf    = 'determ',
+                term           = 0,
+                vapp           = self.conf.shelves_vapp,
+                vconf          = self.conf.shelves_vconf,
+            )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'BoundaryConditions',  # Initial
+                block          = 'coupling_nx',
+                date           = self.conf.rundate,
+                experiment     = self.conf.input_shelf,
+                format         = '[nativefmt]',
+                intent         = 'inout',
+                kind           = 'boundary',
+                local          = 'ELSCFOOPSALBC001_NX',
+#                local          = 'CPLIN+01',
+                nativefmt      = 'fa',
+                source_app     = 'ifs',
+                source_conf    = 'determ',
+                term           = 1,
+                vapp           = self.conf.shelves_vapp,
+                vconf          = self.conf.shelves_vconf,
+            )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'BoundaryConditions',  # Initial
+                block          = 'coupling_nx',
+                date           = self.conf.rundate,
+                experiment     = self.conf.input_shelf,
+                format         = '[nativefmt]',
+                intent         = 'inout',
+                kind           = 'boundary',
+                local          = 'ELSCFOOPSALBC002_NX',
+ #               local          = 'CPLIN+02',
+                nativefmt      = 'fa',
+                source_app     = 'ifs',
+                source_conf    = 'determ',
+                term           = 2,
+                vapp           = self.conf.shelves_vapp,
+                vconf          = self.conf.shelves_vconf,
+            )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'BoundaryConditions',  # Initial
+                block          = 'coupling_nx',
+                date           = self.conf.rundate,
+                experiment     = self.conf.input_shelf,
+                format         = '[nativefmt]',
+                intent         = 'inout',
+                kind           = 'boundary',
+                local          = 'ELSCFOOPSALBC003_NX',
+#                local          = 'CPLIN+03',
+                nativefmt      = 'fa',
+                source_app     = 'ifs',
+                source_conf    = 'determ',
+                term           = 3,
+                vapp           = self.conf.shelves_vapp,
+                vconf          = self.conf.shelves_vconf,
+            )
+
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
                 role           = 'ClimAtmHR',
                 format         = 'fa',
                 genv           = self.conf.appenv_lam,
@@ -358,6 +455,16 @@ class Minim(Task, DavaiIALTaskMixin, IncludesTaskMixin):
                 local          = 'Const.Clim',
                 month          = self.conf.rundate.ymdh,
             )
+            #-------------------------------------------------------------------------------
+            self._wrapped_input(
+                role           = 'ClimAtmLR',
+                format         = 'fa',
+                genv           = self.conf.appenv_lam,
+                kind           = 'clim_model',
+                geometry       = 'nether20km',
+                local          = 'Const.Clim_2x',
+                month          = self.conf.rundate.ymdh,
+            )    
             #-------------------------------------------------------------------------------
             self._wrapped_input(
                 role           = 'ClimPGD',
